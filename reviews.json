@@ -1,1 +1,18 @@
-[]
+[
+ {
+  "rid": "mvykvwa1eeywxzc0",
+  "time": 1793582793,
+  "company": "CincyBath",
+  "trade": "Bath",
+  "city": "Cincinnati OH",
+  "leads": 10.0,
+  "close": 25.0,
+  "comm": 15.0,
+  "emp": "1099",
+  "train": false,
+  "gas": false,
+  "role": "In-home appointments",
+  "stars": 5,
+  "text": "Best in-home sales job I've had. Commission is straightforward: half pays on the next 1st or 15th and the rest at install, so the money comes fast. Hit the monthly number and you get a bonus on the whole month, back to day one. The price sheet is clear, the walk-in showers and tub conversions are good quality, and most of the people I meet really need the work, often older folks who can't safely use their tub anymore. The owner is easy to work with and will listen if a deal needs some flexibility. Nobody micromanages, and you run your own follow-ups and schedule. If you're self-driven and like getting paid for effort, this is a great place"
+ }
+]
