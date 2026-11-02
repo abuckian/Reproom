@@ -1,7 +1,7 @@
 # Pulls new anonymous reviews from the ntfy.sh inbox topic, validates them, appends to reviews.json.
 import json, urllib.request, re, sys
 TOPIC = "reproom-reviews-7f3k9q2xw8"
-TRADES = {"Bath","Windows","Roofing","Siding","HVAC","Solar"}
+TRADES = {"Bath","Windows","Roofing","Siding","HVAC","Solar","Pest"}
 data = json.load(open("reviews.json"))
 seen = {r["rid"] for r in data} | set(json.load(open("removed.json")))
 raw = urllib.request.urlopen(f"https://ntfy.sh/{TOPIC}/json?poll=1&since=all", timeout=30).read().decode()
@@ -22,7 +22,7 @@ for line in raw.splitlines():
                "company": clean(r["company"], 80), "trade": r["trade"], "city": clean(r.get("city"), 60),
                "leads": num(r["leads"], 0, 60), "close": num(r["close"], 0, 100), "comm": num(r["comm"], 0, 50),
                "emp": r["emp"], "train": bool(r["train"]), "gas": bool(r["gas"]),
-               "stars": int(num(r["stars"], 1, 5)), "text": clean(r["text"], 2000)}
+               "role": r.get("role") if r.get("role") in ("In-home appointments","Door to door") else "In-home appointments", "stars": int(num(r["stars"], 1, 5)), "text": clean(r["text"], 2000)}
         if not rec["company"] or not rec["text"] or rec["trade"] not in TRADES or rec["emp"] not in ("W-2", "1099"): continue
         data.append(rec); seen.add(rid); added += 1
     except Exception:

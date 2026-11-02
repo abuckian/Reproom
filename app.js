@@ -1,5 +1,5 @@
 const TOPIC="reproom-reviews-7f3k9q2xw8";const JOBS=[];
-const TRADES=["Bath","Windows","Roofing","Siding","HVAC","Solar"];
+const TRADES=["Bath","Windows","Roofing","Siding","HVAC","Solar","Pest"];
 let ALL=[];
 async function load(){let saved=[],live=[];try{saved=await (await fetch("reviews.json?"+Date.now())).json()}catch(e){}
 try{const t=await (await fetch(`https://ntfy.sh/${TOPIC}/json?poll=1&since=all`)).text();live=t.split("\n").filter(Boolean).map(l=>{try{const e=JSON.parse(l);return e.event==="message"?JSON.parse(e.message):null}catch(x){return null}}).filter(r=>r&&r.rid&&r.company&&TRADES.includes(r.trade)&&r.text)}catch(e){}
@@ -23,7 +23,7 @@ $("#app").innerHTML=`<p><a href="#/">← All companies</a></p><span class="tag">
 <p><a class="btn" href="#/review?c=${encodeURIComponent(c.name)}">Add your review</a></p>`}
 function review(){const pre=decodeURIComponent((location.hash.split("c=")[1]||""));
 $("#app").innerHTML=`<h1>Leave an anonymous review</h1><p class="muted">No name or email needed. Your review is public on RepRoom right away.</p><form class="rv" id="rf">
-<label class="full">Company<input name="company" required value="${esc(pre)}"></label><label>Trade<select name="trade">${TRADES.map(t=>`<option>${t}</option>`).join("")}</select></label><label>City / area<input name="city"></label>
+<label class="full">Company<input name="company" required value="${esc(pre)}"></label><label>Trade<select name="trade">${TRADES.map(t=>`<option>${t}</option>`).join("")}</select></label><label>City / area<input name="city"></label><label>Your role<select name="role"><option>In-home appointments</option><option>Door to door</option></select></label>
 <label>Leads per week<input name="leads" type="number" min="0" max="60" required></label><label>Close rate %<input name="close" type="number" min="0" max="100" required></label><label>Commission %<input name="comm" type="number" step="0.5" min="0" max="50" required></label>
 <label>W-2 or 1099<select name="emp"><option>W-2</option><option>1099</option></select></label><label>Paid training?<select name="train"><option value="1">Yes</option><option value="">No</option></select></label><label>Gas covered?<select name="gas"><option value="1">Yes</option><option value="">No</option></select></label>
 <label>Overall rating<select name="stars">${[5,4,3,2,1].map(n=>`<option value="${n}">${n} ★</option>`).join("")}</select></label><label class="full">Your review<textarea name="text" rows="8" maxlength="2000" required></textarea></label><div class="full"><button class="btn">Submit anonymously</button></div></form><div id="msg"></div>`;
