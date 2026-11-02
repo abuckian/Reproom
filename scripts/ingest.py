@@ -22,7 +22,7 @@ for line in raw.splitlines():
                "company": clean(r["company"], 80), "trade": r["trade"], "city": clean(r.get("city"), 60),
                "leads": num(r["leads"], 0, 60), "close": num(r["close"], 0, 100), "comm": num(r["comm"], 0, 50),
                "emp": r["emp"], "train": bool(r["train"]), "gas": bool(r["gas"]),
-               "stars": int(num(r["stars"], 1, 5)), "text": clean(r["text"], 400)}
+               "stars": int(num(r["stars"], 1, 5)), "text": clean(r["text"], 2000)}
         if not rec["company"] or not rec["text"] or rec["trade"] not in TRADES or rec["emp"] not in ("W-2", "1099"): continue
         data.append(rec); seen.add(rid); added += 1
     except Exception:
