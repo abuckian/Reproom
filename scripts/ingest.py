@@ -3,7 +3,7 @@ import json, urllib.request, re, sys
 TOPIC = "reproom-reviews-7f3k9q2xw8"
 TRADES = {"Bath","Windows","Roofing","Siding","HVAC","Solar"}
 data = json.load(open("reviews.json"))
-seen = {r["rid"] for r in data}
+seen = {r["rid"] for r in data} | set(json.load(open("removed.json")))
 raw = urllib.request.urlopen(f"https://ntfy.sh/{TOPIC}/json?poll=1&since=all", timeout=30).read().decode()
 def clean(s, n): return re.sub(r"\s+", " ", str(s or "")).strip()[:n]
 def num(v, lo, hi):

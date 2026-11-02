@@ -3,7 +3,7 @@ const TRADES=["Bath","Windows","Roofing","Siding","HVAC","Solar"];
 let ALL=[];
 async function load(){let saved=[],live=[];try{saved=await (await fetch("reviews.json?"+Date.now())).json()}catch(e){}
 try{const t=await (await fetch(`https://ntfy.sh/${TOPIC}/json?poll=1&since=all`)).text();live=t.split("\n").filter(Boolean).map(l=>{try{const e=JSON.parse(l);return e.event==="message"?JSON.parse(e.message):null}catch(x){return null}}).filter(r=>r&&r.rid&&r.company&&TRADES.includes(r.trade)&&r.text)}catch(e){}
-const seen=new Set();ALL=[...saved,...live].filter(r=>!seen.has(r.rid)&&seen.add(r.rid));}
+let rm=[];try{rm=await (await fetch("removed.json?"+Date.now())).json()}catch(x){}const seen=new Set(rm);ALL=[...saved,...live].filter(r=>!seen.has(r.rid)&&seen.add(r.rid));}
 function companies(){const cs=[];ALL.forEach(r=>{const name=String(r.company).trim();let c=cs.find(x=>x.name.toLowerCase()===name.toLowerCase());if(!c){c={id:name.toLowerCase().replace(/\W+/g,"-"),name,trade:r.trade,city:r.city||"",reviews:[]};cs.push(c)}c.reviews.push(r)});return cs.sort((a,b)=>b.reviews.length-a.reviews.length)}
 const avg=(a,k)=>a.reduce((s,r)=>s+ +r[k],0)/a.length;const pct=(a,k)=>Math.round(100*a.filter(r=>r[k]).length/a.length);
 const stars=n=>"★".repeat(Math.round(n))+"☆".repeat(5-Math.round(n));
