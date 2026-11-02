@@ -1,5 +1,5 @@
 const TOPIC="reproom-reviews-7f3k9q2xw8";const JOBS=[];
-const TRADES=["Bath","Windows","Roofing","Siding","HVAC","Solar","Pest"];
+const TRADES=["Bath","Windows","Roofing","Siding","HVAC","Solar","Pest","Internet"];
 let ALL=[];
 async function load(){let saved=[],live=[];try{saved=await (await fetch("reviews.json?"+Date.now())).json()}catch(e){}
 try{const t=await (await fetch(`https://ntfy.sh/${TOPIC}/json?poll=1&since=all`)).text();live=t.split("\n").filter(Boolean).map(l=>{try{const e=JSON.parse(l);return e.event==="message"?JSON.parse(e.message):null}catch(x){return null}}).filter(r=>r&&r.rid&&r.company&&TRADES.includes(r.trade)&&r.text)}catch(e){}
