@@ -193,7 +193,7 @@
     if (id === "photos") {
       h = '<div class="step-head"><div><div class="section-title">Photos</div><div class="hint">Optional. Snap the house now, or skip and use See it later.</div></div></div>' +
         '<div class="rows">' +
-        '<a class="row" href="../windows/?v=winpkg1"><div class="r-main"><div class="t-name">Open photo overlay</div><div class="r-hint">Mark windows on a house photo</div></div></a>' +
+        '<a class="row" href="../?v=winpkg1"><div class="r-main"><div class="t-name">Open photo overlay</div><div class="r-hint">Mark windows on a house photo</div></div></a>' +
         '<button type="button" class="row" id="photoSkip"><div class="r-main"><div class="t-name">Skip for now</div><div class="r-hint">You can come back on the See it step</div></div></button>' +
         "</div>";
     } else if (id === "type") {
@@ -229,7 +229,7 @@
       h += "</div>";
     } else if (id === "reveal") {
       h = '<div class="step-head"><div><div class="section-title">See it on the house</div><div class="hint">Use the photo overlay to show before and after with your frame color and grid.</div></div></div>' +
-        '<div class="rows"><a class="row" href="../windows/?v=winpkg1"><div class="r-main"><div class="t-name">Open Windows photo tool</div><div class="r-hint">Mark each window, then slide before and after</div></div></a>' +
+        '<div class="rows"><a class="row" href="../?v=winpkg1"><div class="r-main"><div class="t-name">Open Windows photo tool</div><div class="r-hint">Mark each window, then slide before and after</div></div></a>' +
         '<button type="button" class="row" id="revealSkip"><div class="r-main"><div class="t-name">Skip to summary</div></div></button></div>';
     } else if (id === "summary") {
       var rows = selections();
