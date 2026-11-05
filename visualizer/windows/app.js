@@ -573,14 +573,19 @@
     g.globalCompositeOperation = "source-over";
     g.globalAlpha = 1;
     renderAfter(g);
+    // Slider: 0 = Before (original house), 100 = After (overlays).
+    // Cover the left (1-sp) fraction with the original photo so Before←→After reads correctly.
     var sp = ($("split") ? Number($("split").value) : 0) / 100;
-    if (sp > 0) {
+    var beforeW = W * (1 - sp);
+    if (beforeW > 0) {
       g.save();
-      g.beginPath(); g.rect(0, 0, W * sp, H); g.clip();
+      g.beginPath(); g.rect(0, 0, beforeW, H); g.clip();
       g.drawImage(overlay.img, 0, 0, W, H);
       g.restore();
-      g.fillStyle = "#fff";
-      g.fillRect(W * sp - 2, 0, 4, H);
+      if (sp > 0 && sp < 1) {
+        g.fillStyle = "#fff";
+        g.fillRect(beforeW - 2, 0, 4, H);
+      }
     }
     (state.marks || []).forEach(function (A, j) {
       if (j !== overlay.sel) return;
