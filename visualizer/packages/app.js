@@ -1,7 +1,7 @@
 /* RepRoom option picker. Plain JS, no build step. */
 (function () {
   "use strict";
-  var C = window.CATALOG, P = window.Pricing, M = window.Mapping;
+  var C = window.CATALOG, P = window.Pricing, M = window.Mapping, Flow = window.Flow;
   var REP_PIN_PLACEHOLDER = "0000"; // Placeholder only. See README. Not real security.
   var NO_PRICE = true; // Public RepRoom build: never show money.
   var STORE_KEY = "cincybath.picker.v1";
