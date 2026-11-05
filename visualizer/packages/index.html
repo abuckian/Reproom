@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="RepRoom">
+  <meta name="theme-color" content="#b91c1c">
+  <meta name="robots" content="noindex, nofollow">
+  <title>RepRoom Bathroom Options</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="noprice">
+  <header class="topbar">
+    <div class="brand" id="brand" aria-label="RepRoom">
+      <div class="brand-text">
+        <img class="brand-logo" src="img/reproom-logo.svg" alt="RepRoom" width="146" height="51" draggable="false">
+        <div class="brand-sub">Design a bathroom package</div>
+      </div>
+      <span class="rep-badge rep-only noprice-hide">REP</span>
+    </div>
+    <div class="top-line" id="topLine"></div>
+    <div class="total-pill noprice-hide" id="totalPill">
+      <span class="total-label">Your total</span>
+      <strong class="total-value" id="topTotal">—</strong>
+    </div>
+  </header>
+  <nav class="stepbar" id="stepNav" aria-label="Steps"></nav>
+
+  <main class="layout">
+    <section class="stage" id="stage">
+      <div class="stage-scroll" id="stageScroll">
+        <div id="preview"></div>
+        <div id="stepBody"></div>
+      </div>
+    </section>
+    <aside class="side" id="side"></aside>
+  </main>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="drawer" id="repDrawer" aria-label="Rep view" hidden></aside>
+
+  <div class="modal" id="pinModal" hidden>
+    <div class="pin-card">
+      <div class="pin-title">Rep access</div>
+      <div class="pin-dots" id="pinDots"><i></i><i></i><i></i><i></i></div>
+      <div class="pin-pad" id="pinPad"></div>
+      <button class="link-btn" data-act="pin-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <div class="modal" id="custModal" hidden>
+    <form class="form-card" id="custForm" autocomplete="off">
+      <div class="form-title" id="custTitle">Save this design</div>
+      <div class="form-sub" id="custSub">Add the customer's name to save this design and make a printable summary.</div>
+      <label class="field"><span>Customer name</span><input id="custName" name="name" type="text" autocapitalize="words" required></label>
+      <label class="field"><span>Address <em>(optional)</em></span><input id="custAddress" name="address" type="text" autocapitalize="words"></label>
+      <label class="field"><span>Phone <em>(optional)</em></span><input id="custPhone" name="phone" type="tel" inputmode="tel"></label>
+      <div class="form-error" id="custError" hidden>Please enter the customer's name.</div>
+      <div class="btns">
+        <button type="button" class="btn ghost" data-act="cust-cancel">Cancel</button>
+        <button type="submit" class="btn primary" id="custSubmit">Save and show summary</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal" id="savedModal" hidden>
+    <div class="form-card wide">
+      <div class="saved-head"><div class="form-title">Saved designs</div><button class="btn ghost" style="flex:0 0 auto;height:44px;padding:0 16px" data-act="saved-close">Close</button></div>
+      <div class="form-sub">Saved on this device only.</div>
+      <div id="savedList" class="saved-list"></div>
+    </div>
+  </div>
+
+  <div class="print-view" id="printView" hidden>
+    <div class="print-toolbar">
+      <div class="pt-title">Printable summary</div>
+      <div class="pt-actions">
+        <button class="btn ghost" style="flex:0 0 auto;padding:0 22px" data-act="print-close">Done</button>
+        <button class="btn primary" style="flex:0 0 auto;padding:0 22px" data-act="print-now">Print or save as PDF</button>
+      </div>
+    </div>
+    <div class="print-scroll"><article class="sheet" id="printSheet"></article></div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="catalog.js"></script>
+  <script src="pricing.js"></script>
+  <script src="flow.js"></script>
+  <script src="mapping.js"></script>
+  <script src="preview-prompt.js"></script>
+  <script src="photo-utils.js"></script>
+  <script src="photo-store.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
