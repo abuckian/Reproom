@@ -11,7 +11,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 a{color:inherit;text-decoration:none}
 header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.25rem}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.25rem;color:var(--ink)}
 .brand img{width:28px;height:28px;border-radius:7px}
 .brand span{color:var(--blue)}
 main{max-width:720px;margin:0 auto;padding:16px 12px 40px}
@@ -27,39 +27,39 @@ h1{font-size:1.25rem;margin:0 0 6px}
 .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--blue);background:#e8eefc;border-radius:999px;padding:3px 8px;width:fit-content}
 </style></head><body>
 <header>
-  <a class="brand" href="../?v=theme1"><img src="../logo.svg" width="32" height="32" alt=""><div>Rep<span>Room</span></div></a>
-  <a href="../?v=theme1" style="font-weight:600;font-size:14px;color:var(--muted)">Home</a>
+  <a class="brand" href="../?v=fix1"><img src="../logo.svg" width="28" height="28" alt=""><div>Rep<span>Room</span></div></a>
+  <a href="../?v=fix1" style="font-weight:600;font-size:14px;color:var(--muted)">Home</a>
 </header>
 <main>
   <h1>Rep tools</h1>
-  <p class="hint">Bathroom packages use the same option flow with no prices. Photo overlays for other trades. Ian’s priced CincyBath closer stays on the private link.</p>
+  <p class="hint">Bathroom is the package builder (same flow as CincyBath, no prices on the public version). Photo overlays are separate. Ian’s priced closer stays private.</p>
   <div class="grid">
-    <a class="card" href="packages/?v=theme1">
+    <a class="card" href="packages/?v=fix1">
       <span class="tag">Live</span>
-      <h2>Bathroom packages</h2>
-      <p>Same product flow as the closer: system, walls, fixtures, doors, full bath options. No prices on this public version.</p>
-      <span class="btn">Open packages</span>
+      <h2>Bathroom</h2>
+      <p>Step-by-step package builder: system, walls, fixtures, doors, full bath options. Public version has no prices.</p>
+      <span class="btn">Open bathroom</span>
     </a>
-    <a class="card" href="https://cincybath-visualizer.pages.dev/?v=theme1" target="_blank" rel="noopener">
+    <a class="card" href="https://cincybath-visualizer.pages.dev/?v=fix1" target="_blank" rel="noopener">
       <span class="tag">Private</span>
       <h2>CincyBath priced</h2>
-      <p>Ian’s in-home closer with sheet prices. Password required. Numbers stay off this public site.</p>
-      <span class="btn">Open priced picker</span>
+      <p>Same builder with sheet prices for in-homes. Password required.</p>
+      <span class="btn">Open priced closer</span>
     </a>
-    <a class="card" href="bath/?v=theme1">
-      <span class="tag">Preview</span>
-      <h2>Bathroom photo overlay</h2>
-      <p>Snap the bathroom. Try tile, paint, shower walls, floor or a vanity. No prices.</p>
-      <span class="btn">Open quick preview</span>
+    <a class="card" href="bath/?v=fix1">
+      <span class="tag">Overlay</span>
+      <h2>Bathroom photo</h2>
+      <p>Snap the bathroom and try tile, paint, shower walls, floor or a vanity. Not the package builder.</p>
+      <span class="btn">Open photo overlay</span>
     </a>
-    <a class="card" href="windows/?v=theme1">
-      <span class="tag">Live</span>
+    <a class="card" href="windows/?v=fix1">
+      <span class="tag">Overlay</span>
       <h2>Windows</h2>
       <p>Snap the house. Mark each window, pick frame color and grid style, then show the after.</p>
       <span class="btn">Open windows</span>
     </a>
-    <a class="card" href="roofing/?v=theme1">
-      <span class="tag">Live</span>
+    <a class="card" href="roofing/?v=fix1">
+      <span class="tag">Overlay</span>
       <h2>Roofing</h2>
       <p>Snap the house. Mark the roof, pick a shingle color, then show before and after.</p>
       <span class="btn">Open roofing</span>
@@ -67,13 +67,7 @@ h1{font-size:1.25rem;margin:0 0 6px}
     <div class="card soon">
       <span class="tag" style="color:#5b6475;background:#eef1f6">Next</span>
       <h2>Siding</h2>
-      <p>House color and material overlays. On the list after roofing.</p>
-      <span class="btn">Coming soon</span>
-    </div>
-    <div class="card soon">
-      <span class="tag" style="color:#5b6475;background:#eef1f6">Later</span>
-      <h2>Solar</h2>
-      <p>Panel layouts on the roof. Last of the four.</p>
+      <p>House color and material overlays.</p>
       <span class="btn">Coming soon</span>
     </div>
   </div>
