@@ -33,25 +33,27 @@ input { font: inherit; }
 body.rep .rep-only { display: revert !important; }
 body.rep span.rep-only, body.rep .rep-badge.rep-only { display: inline-flex !important; }
 
-/* Top bar */
+/* Top bar — match RepRoom home header */
 .topbar {
-  height: 72px; flex: none; display: flex; align-items: center; gap: 20px;
-  padding: 0 24px; background: var(--red); color: #fff;
+  height: 64px; flex: none; display: flex; align-items: center; gap: 16px;
+  padding: 0 18px; background: #fff; color: var(--ink);
+  border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5;
 }
-.brand { display: flex; align-items: center; gap: 12px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: default; min-width: 260px; }
-.brand-text { display: flex; flex-direction: row; align-items: center; gap: 14px; }
-/* CincyBath logo (white trace of the owner's logo, img/cincybath-logo-white.svg; 3484x1216 artwork, ratio 2.865) */
-.brand-logo { display: block; height: 56px; width: auto; aspect-ratio: 3484 / 1216; pointer-events: none; -webkit-user-drag: none; }
-.brand-sub { font-size: 13px; color: #d9e4ff; letter-spacing: .3px; line-height: 1.25; max-width: 104px; padding-left: 14px; border-left: 1px solid rgba(255,255,255,.35); }
-.rep-badge { font-size: 11px; font-weight: 700; letter-spacing: 1px; background: #fff; color: var(--red); padding: 3px 7px; border-radius: 6px; }
-.top-line { flex: 1; text-align: center; font-size: 15px; color: #e8eefc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand { display: flex; align-items: center; gap: 10px; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: default; min-width: 0; text-decoration: none; color: inherit; }
+.brand-text { display: flex; flex-direction: row; align-items: center; gap: 12px; }
+.brand-logo { display: block; height: 28px !important; width: 28px !important; border-radius: 7px; aspect-ratio: auto; pointer-events: none; -webkit-user-drag: none; }
+.brand-name { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.01em; color: var(--ink); }
+.brand-name span { color: var(--blue); }
+.brand-sub { font-size: 13px; color: var(--muted); letter-spacing: .2px; line-height: 1.25; max-width: 120px; padding-left: 12px; border-left: 1px solid var(--line); }
+.rep-badge { font-size: 11px; font-weight: 700; letter-spacing: 1px; background: #e8efff; color: var(--blue); padding: 3px 7px; border-radius: 6px; }
+.top-line { flex: 1; text-align: center; font-size: 15px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .total-pill {
   display: flex; flex-direction: column; align-items: flex-end; justify-content: center;
-  background: #fff; border: 1px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,.12);
-  padding: 6px 18px; border-radius: 14px; min-width: 170px;
+  background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
+  padding: 6px 16px; border-radius: 14px; min-width: 140px;
 }
 .total-label { font-size: 11.5px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); }
-.total-value { font-size: 26px; font-weight: 700; color: var(--red); font-variant-numeric: tabular-nums; }
+.total-value { font-size: 26px; font-weight: 700; color: var(--blue); font-variant-numeric: tabular-nums; }
 .total-value.bump { animation: bump .35s ease; }
 @keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.07); color: var(--red-deep); } 100% { transform: scale(1); } }
 
@@ -538,12 +540,12 @@ body:not(.rep) .rep-note { display: none !important; }
 }
 
 
+
 /* Public RepRoom: no prices */
 .noprice-hide{display:none!important}
 .t-price:empty,.r-price:empty,.r-sub:empty,.lc-price:empty{display:none!important}
 body.noprice .total-pill,body.noprice .rep-badge{display:none!important}
 
-.brand-name{font-weight:800;font-size:1.2rem;letter-spacing:-.01em;color:#fff}
-.brand-name span{opacity:.95}
-.brand-logo{height:32px!important;width:32px!important;border-radius:8px;aspect-ratio:auto}
-.btn.primary,.primary{background:var(--blue)}
+/* Shared controls on blue */
+.btn.primary,.primary,button.primary{background:var(--blue);color:#fff;border:0}
+.link-btn{color:var(--blue)}
