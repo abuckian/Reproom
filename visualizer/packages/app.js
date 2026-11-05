@@ -91,6 +91,23 @@
     if (n == null || n === "" || !isFinite(Number(n))) return "";
     return "$" + Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 });
   }
+  function plusMoney(n) {
+    var m = money(n);
+    return m ? "+" + m : "";
+  }
+  function pricedLabel(prefix, n, suffix) {
+    var m = money(n);
+    if (!m) return "";
+    return (prefix || "") + m + (suffix || "");
+  }
+  function cleanPriceText(s) {
+    if (s == null) return null;
+    s = String(s).trim();
+    if (!s || s === "+" || s === "From" || s === "System price" || s === "plus") return null;
+    if (/^(From|System price|\+)\s*$/.test(s)) return null;
+    if (/^System price\s+(plus\s+)?$/.test(s)) return null;
+    return s;
+  }
   function line() { return P.findLine(C, state.line); }
   function li(id) { return P.lineItem(C, line(), id); }
   function has(id) { return !!li(id); }
@@ -220,14 +237,14 @@
       checkBox() +
       '<div class="r-main"><div class="r-name">' + esc(it.label) + star(it.star) + "</div>" +
       (hint ? '<div class="r-hint">' + esc(hint) + "</div>" : "") + repNotes(it) + "</div>" +
-      '<div class="r-price">+' + money(it.price) + "</div></button>";
+      (NO_PRICE ? "" : '<div class="r-price">' + plusMoney(it.price) + "</div>") + "</button>";
   }
 
   function qtyRow(it) {
     var q = Number(state.qty[it.id]) || 0;
     return '<div class="row' + (q ? " on" : "") + '">' +
       '<div class="r-main"><div class="r-name">' + esc(it.label) + star(it.star) + "</div>" +
-      '<div class="r-hint">' + money(it.price) + " per" + (it.unitName ? " " + esc(it.unitName) : "") + "</div>" + repNotes(it) + "</div>" +
+      (NO_PRICE ? "" : '<div class="r-hint">' + money(it.price) + " per" + (it.unitName ? " " + esc(it.unitName) : "") + "</div>") + repNotes(it) + "</div>" +
       '<div class="stepper"><button data-act="qty" data-id="' + it.id + '" data-d="-1"' + (q ? "" : " disabled") + ' aria-label="Less">&minus;</button>' +
       '<span class="q">' + q + '</span><button data-act="qty" data-id="' + it.id + '" data-d="1" aria-label="More">+</button></div>' +
       '<div class="r-sub">' + (q ? money(q * it.price) : "") + "</div></div>";
@@ -238,7 +255,7 @@
     var n = Number(v) || 0;
     return '<div class="row' + (n > 0 ? " on" : "") + '" data-sqrow="' + it.id + '">' +
       '<div class="r-main"><div class="r-name">' + esc(it.label) + star(it.star) + "</div>" +
-      '<div class="r-hint">' + money(it.price) + " per sq ft</div>" + repNotes(it) + "</div>" +
+      (NO_PRICE ? "" : '<div class="r-hint">' + money(it.price) + " per sq ft</div>") + repNotes(it) + "</div>" +
       '<div class="stepper"><button data-act="sqft" data-id="' + it.id + '" data-d="-5" aria-label="Less">&minus;</button>' +
       '<input type="text" inputmode="decimal" data-sqft="' + it.id + '" value="' + esc(v) + '" placeholder="0" aria-label="Square feet">' +
       '<button data-act="sqft" data-id="' + it.id + '" data-d="5" aria-label="More">+</button></div><span class="unit">sq ft</span>' +
@@ -247,7 +264,8 @@
 
   function tile(o) {
     // o: {act, sel, name, sub, price (number|null), included, swatch, swatchClass, swatchHtml, small, extraAttrs}
-    var priceHtml = o.priceText != null ? '<div class="t-price' + (o.inc ? " inc" : "") + '">' + o.priceText + "</div>" : "";
+    var pt = cleanPriceText(o.priceText);
+    var priceHtml = pt != null ? '<div class="t-price' + (o.inc ? " inc" : "") + '">' + pt + "</div>" : "";
     var sw = o.swatch ? '<div class="swatch" style="background:' + o.swatch + '"></div>' : (o.swatchHtml ? '<div class="swatch ' + (o.swatchClass || "") + '">' + o.swatchHtml + "</div>" : "");
     return '<button class="tile' + (o.sel ? " sel" : "") + (o.small ? " small" : "") + (o.off ? " off" : "") + '" ' + o.act + ">" + checkBox() + sw +
       '<div class="t-name">' + o.name + "</div>" + (o.sub ? '<div class="t-sub">' + o.sub + "</div>" : "") + priceHtml + "</button>";
@@ -261,7 +279,7 @@
       var icon = t.id === "shower" ? ICON.bigshower : t.id === "combo" ? ICON.combo : t.id === "soaker" ? ICON.bath : ICON.walkintub;
       return '<button class="type-card' + (state.type === t.id ? " sel" : "") + '" data-act="type" data-val="' + t.id + '">' + checkBox() +
         '<div class="type-icon">' + icon + '</div><div class="type-body"><div class="type-name">' + esc(t.name) + '</div><div class="type-sub">' + esc(t.sub) + "</div>" +
-        '<div class="type-price">From ' + money(L.basePrice) + "</div>" +
+        (NO_PRICE ? "" : '<div class="type-price">From ' + money(L.basePrice) + "</div>") +
         '<div class="rep-note">' + esc(TYPE_REP[t.id]) + "</div></div></button>";
     }).join("") + "</div>";
     var sc = scope();
@@ -286,8 +304,8 @@
     var st = M.sizeStatus(C, state), L = line();
     if (st.ok && L) {
       var what = state.type === "shower" ? (st.tier === "standard" ? "Standard size walk-in shower" : "Extra large walk-in shower") : state.type === "combo" ? "Fits a tub/shower combo" : state.type === "soaker" ? "Fits a soaker tub" : "Walk-in tub";
-      var extra = state.picks.over_36x60 ? '<div class="size-sub">PuroStone over 36 x 60 adds ' + money(li("over_36x60").price) + star(li("over_36x60").star) + "</div>" : "";
-      return '<div class="size-status ok">' + ICON.check + '<div><div class="size-main">' + esc(what) + ", " + esc(st.text) + '</div><div class="size-sub">System price ' + money(P.systemPrice(C, L, state)) + adderText(L) + "</div>" + extra +
+      var extra = (!NO_PRICE && state.picks.over_36x60) ? '<div class="size-sub">PuroStone over 36 x 60 adds ' + money(li("over_36x60").price) + star(li("over_36x60").star) + "</div>" : "";
+      return '<div class="size-status ok">' + ICON.check + '<div><div class="size-main">' + esc(what) + ", " + esc(st.text) + '</div>' + (NO_PRICE ? "" : '<div class="size-sub">System price ' + money(P.systemPrice(C, L, state)) + adderText(L) + "</div>") + extra +
         '<div class="rep-note">' + esc(L.sheetName) + " (sheet " + esc(L.sheet) + ")</div></div></div>";
     }
     if (st.code === "over") return '<div class="size-status over"><div><div class="size-main">Over max size, talk to your rep</div><div class="size-sub">' + esc(st.message.replace("Over max size, talk to your rep. ", "")) + "</div></div></div>";
@@ -330,11 +348,11 @@
       if (id === "standard") { o.swatchHtml = ICON.panel; o.priceText = "Included"; o.inc = true; }
       if (id === "sim_tile") {
         var pwL = P.lineItem(C, wm === "purostone" ? P.findLine(C, M.systemFor(C, Object.assign({}, state, { wallMaterial: "standard" })).line) : L, "premium_wall");
-        o.swatchHtml = ICON.simtile; o.priceText = pwL ? "+" + money(pwL.price) + star(pwL.star) : "";
+        o.swatchHtml = ICON.simtile; o.priceText = pwL ? plusMoney(pwL.price) + star(pwL.star) : "";
       }
       if (id === "purostone") {
         var S3 = P.findLine(C, "s3"), big = M.sizeStatus(C, state).tier === "xl";
-        o.swatchHtml = ICON.stone; o.priceText = "System price " + money(P.systemPrice(C, S3, state)) + (big ? " plus " + money(S3.prices.over_36x60.price) + " over 36 x 60" : "");
+        o.swatchHtml = ICON.stone; o.priceText = NO_PRICE ? "" : ("System price " + money(P.systemPrice(C, S3, state)) + (big ? " plus " + money(S3.prices.over_36x60.price) + " over 36 x 60" : ""));
       }
       if (!fits) { o.off = true; o.inc = false; o.act = 'data-act="noop" disabled'; o.priceText = "Too big for this size, talk to your rep"; }
       return tile(o);
@@ -371,7 +389,7 @@
     var it = li("premium_trim");
     var h = head("Trim finish", "Chrome is included. Brushed Nickel, Oil Rubbed Bronze, and Matte Black are the Premium Trim Package.");
     h += '<div class="tiles wide">' + C.trimFinishes.map(function (t) {
-      return tile({ act: 'data-act="set" data-key="trim" data-val="' + t.id + '"', sel: state.trim === t.id, name: esc(t.name) + (t.included ? "" : star(it && it.star)), sub: t.included ? "" : "Premium Trim Package", swatch: t.swatch, priceText: t.included ? "Included" : "+" + money(it.price), inc: !!t.included });
+      return tile({ act: 'data-act="set" data-key="trim" data-val="' + t.id + '"', sel: state.trim === t.id, name: esc(t.name) + (t.included ? "" : star(it && it.star)), sub: t.included ? "" : "Premium Trim Package", swatch: t.swatch, priceText: t.included ? "Included" : plusMoney(it.price), inc: !!t.included });
     }).join("") + "</div>";
     if (it) h += '<div class="rows" style="margin-top:10px">' + (ui.rep ? '<div class="callout rep">' + repNotes(it) + "</div>" : "") + "</div>";
     return h;
@@ -383,7 +401,7 @@
     var h = head("Shower head", "Your walk-in tub comes without a shower. You can add one.");
     h += '<div class="tiles wide tub-shower">' +
       tile({ act: 'data-act="addshower" data-val="0"', sel: !on, name: "No shower", sub: "Tub only", swatchHtml: ICON.walkintub, swatchClass: "icon", priceText: "Included", inc: true }) +
-      tile({ act: 'data-act="addshower" data-val="1"', sel: on, name: "Add Shower" + star(it.star), sub: "Adds a shower head to your tub", swatchHtml: HEAD_ICON.standard, swatchClass: "icon", priceText: "+" + money(it.price) }) +
+      tile({ act: 'data-act="addshower" data-val="1"', sel: on, name: "Add Shower" + star(it.star), sub: "Adds a shower head to your tub", swatchHtml: HEAD_ICON.standard, swatchClass: "icon", priceText: plusMoney(it.price) }) +
       "</div>";
     if (ui.rep) h += '<div class="rows" style="margin-top:10px"><div class="callout rep">Sheet: ' + esc(it.sheetLabel) + " " + money(it.price) + (it.star ? "*" : "") + " (Walk-In Tubs, Upgrades). The Upgraded Fixture is not offered on walk-in tubs." + repNotes(it) + "</div></div>";
     return h;
@@ -397,10 +415,10 @@
     if (L.hasMoenValve) tiles.push(tile({ act: 'data-act="set" data-key="fixture" data-val="standard"', sel: state.fixture === "standard" || !state.fixture, name: esc(fs.name), sub: esc(fs.desc), swatchHtml: HEAD_ICON.standard, swatchClass: "icon", priceText: "Included", inc: true }));
     else tiles.push(tile({ act: 'data-act="set" data-key="fixture" data-val="none"', sel: state.fixture === "none" || !state.fixture, name: "No fixture upgrade", swatchHtml: ICON.shower, swatchClass: "icon", priceText: "No charge", inc: true }));
     C.fixtures.forEach(function (f) {
-      tiles.push(tile({ act: 'data-act="set" data-key="fixture" data-val="' + f.id + '"', sel: state.fixture === f.id, name: esc(f.name) + star(it.star), sub: esc(f.desc), swatchHtml: HEAD_ICON[f.id] || ICON.shower, swatchClass: "icon", priceText: "+" + money(it.price) }));
+      tiles.push(tile({ act: 'data-act="set" data-key="fixture" data-val="' + f.id + '"', sel: state.fixture === f.id, name: esc(f.name) + star(it.star), sub: esc(f.desc), swatchHtml: HEAD_ICON[f.id] || ICON.shower, swatchClass: "icon", priceText: plusMoney(it.price) }));
     });
     h += '<div class="tiles heads">' + tiles.join("") + "</div>";
-    h += '<div class="fine">Each upgraded head is +' + money(it.price) + ".</div>";
+    if (!NO_PRICE) h += '<div class="fine">Each upgraded head is +' + money(it.price) + ".</div>";
     if (ui.rep) h += '<div class="rep-note">Each paid head is the sheet\'s ' + esc(it.sheetLabel) + " (" + money(it.price) + ").</div>";
     return h;
   }
@@ -410,7 +428,7 @@
     var tiles = C.doors.filter(function (d) { return d.included || has(d.item); }).map(function (d) {
       if (d.included) return tile({ act: 'data-act="set" data-key="door" data-val="' + d.id + '"', sel: state.door === d.id, name: esc(d.name), swatchHtml: ICON.rod, swatchClass: "icon", priceText: "Included", inc: true });
       var it = li(d.item);
-      return tile({ act: 'data-act="set" data-key="door" data-val="' + d.id + '"', sel: state.door === d.id, name: esc(it.label) + star(it.star), sub: esc(it.hint || ""), swatchHtml: ICON.door, swatchClass: "icon", priceText: "+" + money(it.price) });
+      return tile({ act: 'data-act="set" data-key="door" data-val="' + d.id + '"', sel: state.door === d.id, name: esc(it.label) + star(it.star), sub: esc(it.hint || ""), swatchHtml: ICON.door, swatchClass: "icon", priceText: plusMoney(it.price) });
     });
     h += '<div class="section-title">Door</div><div class="tiles">' + tiles.join("") + "</div>";
     if (ui.rep) {
@@ -433,9 +451,9 @@
     var h;
     if (pc) {
       var it = li("add_shelves_gbs");
-      h = head("Accessories", "Your system includes " + pc.included + " grab bars or corner shelves in any mix. Each one after that is " + money(it.price) + ".");
+      h = head("Accessories", NO_PRICE ? ("Your system includes " + pc.included + " grab bars or corner shelves in any mix. Extra pieces can be added after that.") : ("Your system includes " + pc.included + " grab bars or corner shelves in any mix. Each one after that is " + money(it.price) + "."));
       var status = pc.extra > 0
-        ? '<span class="pc-badge extra">' + pc.extra + " extra x " + money(it.price) + " = " + money(pc.amount) + "</span>"
+        ? (NO_PRICE ? '<span class="pc-badge extra">' + pc.extra + ' extra</span>' : '<span class="pc-badge extra">' + pc.extra + ' extra x ' + money(it.price) + ' = ' + money(pc.amount) + '</span>')
         : '<span class="pc-badge free">' + pc.freeLeft + " of " + pc.included + " free left</span>";
       h += '<div class="pc-card"><div class="pc-head"><div><div class="pc-title">' + pc.included + ' included</div><div class="pc-sub">' + pc.total + " selected</div></div>" + status + "</div>";
       h += '<div class="rows">' + pc.parts.map(function (p) {
@@ -482,7 +500,7 @@
     var src = fb.vanity.sources.filter(function (s) { return s.id === state.vanitySource; })[0];
     if (src) {
       h += '<div class="section-desc" style="margin-top:14px">Vanity width</div><div class="tiles">' + src.sizes.map(function (z) {
-        return tile({ act: 'data-act="set" data-key="vanity" data-val="' + z.id + '"', sel: state.vanity === z.id, name: esc(z.sheetLabel), priceText: "+" + money(z.price), small: false });
+        return tile({ act: 'data-act="set" data-key="vanity" data-val="' + z.id + '"', sel: state.vanity === z.id, name: esc(z.sheetLabel), priceText: plusMoney(z.price), small: false });
       }).join("") + "</div>";
       if (src.colors) {
         h += '<div class="section-desc" style="margin-top:14px">Vanity color</div><div class="tiles five">' + src.colors.map(function (c) {
@@ -500,7 +518,7 @@
     h += '<div class="section-title">Toilet</div><div class="section-desc">' + esc(t.desc) + '</div><div class="tiles wide">';
     h += tile({ act: 'data-act="set" data-key="toilet" data-val=""', sel: !state.toilet, name: "No toilet", small: true });
     t.options.forEach(function (o) {
-      h += tile({ act: 'data-act="set" data-key="toilet" data-val="' + o.id + '"', sel: state.toilet === o.id, name: esc(o.label || o.sheetLabel), priceText: "+" + money(o.price) });
+      h += tile({ act: 'data-act="set" data-key="toilet" data-val="' + o.id + '"', sel: state.toilet === o.id, name: esc(o.label || o.sheetLabel), priceText: plusMoney(o.price) });
     });
     h += "</div>";
     h += '<div class="rep-note">' + esc(t.repNote) + "</div>";
@@ -587,7 +605,7 @@
       });
     });
     h += '<div class="sum-sec">Included with your system</div>' + L.includes.map(function (s) { return '<div class="sum-row"><div class="n">' + esc(s) + '</div><div class="a inc">Included</div></div>'; }).join("");
-    h += '<div class="sum-total"><span>Total</span><strong>' + money(q.total) + "</strong></div>";
+    if (!NO_PRICE) h += '<div class="sum-total"><span>Total</span><strong>' + money(q.total) + "</strong></div>";
     if (q.stars.length) h += '<div class="rep-note">* ' + q.stars.length + " starred item(s) in this quote are subject to change. " + esc(C.meta.starNote) + "</div>";
     h += "</div>";
     return h;
@@ -898,7 +916,7 @@
 
   function sideWaitText() {
     var c = M.sizeStatus(C, state).code;
-    return c === "over" ? "Over max size, talk to your rep." : "Enter the size to see your price.";
+    return c === "over" ? "Over max size, talk to your rep." : (NO_PRICE ? "Enter the size to continue." : "Enter the size to see your price.");
   }
   function canGoNext() {
     if (ui.step === "photos") return true;
@@ -912,10 +930,11 @@
     var next = steps[i + 1], prev = steps[i - 1];
     var h = '<div class="side-head"><div class="side-kicker">Your selections</div><div class="side-line">' + (L ? esc(customerName()) : state.type ? esc(M.typeName(state)) : "Pick a type to begin") + "</div></div>";
     h += '<div class="side-list">';
-    if (!L) h += '<div class="side-empty">' + (state.type ? sideWaitText() : "Pick a walk-in shower, soaker tub, or walk-in tub. Your total updates with every choice.") + "</div>";
+    if (!L) h += '<div class="side-empty">' + (state.type ? sideWaitText() : NO_PRICE ? "Pick a walk-in shower, soaker tub, or walk-in tub. Your selections build as you go." : "Pick a walk-in shower, soaker tub, or walk-in tub. Your total updates with every choice.") + "</div>";
     else {
       var rows = q.rows.slice(1).filter(function (r) { return !r.isAdder; });
-      h += '<div class="side-row"><div class="n">System price' + (ui.rep ? "<small>" + esc(L.name) + adderText(L) + "</small>" : "") + '</div><div class="a">' + money(P.systemPrice(C, L, state)) + "</div></div>";
+      if (NO_PRICE) h += '<div class="side-row"><div class="n">System' + (ui.rep ? "<small>" + esc(L.name) + "</small>" : "") + '</div><div class="a">Selected</div></div>';
+      else h += '<div class="side-row"><div class="n">System price' + (ui.rep ? "<small>" + esc(L.name) + adderText(L) + "</small>" : "") + '</div><div class="a">' + money(P.systemPrice(C, L, state)) + "</div></div>";
       if (!rows.length) h += '<div class="side-empty">No add-ons yet.</div>';
       rows.forEach(function (r) {
         var sub = r.pieces ? r.detail + ", " + r.qty + " extra x " + money(r.unitPrice) : r.unit === "per" ? r.qty + " x " + money(r.unitPrice) : r.unit === "sqft" ? r.qty + " sq ft" : (r.detail || "");
@@ -923,7 +942,7 @@
       });
     }
     h += "</div>";
-    h += '<div class="side-foot"><div class="side-total"><span>Total</span><strong>' + money(q.total) + "</strong></div>";
+    h += '<div class="side-foot">' + (NO_PRICE ? "" : '<div class="side-total"><span>Total</span><strong>' + money(q.total) + "</strong></div>");
     if (ui.step === "summary") {
       h += '<div class="btns"><button class="btn ghost" data-act="back">Back</button><button class="btn brass" data-act="save-design">Save this design</button></div>';
     } else {

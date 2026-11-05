@@ -549,3 +549,9 @@ body.noprice .total-pill,body.noprice .rep-badge{display:none!important}
 /* Shared controls on blue */
 .btn.primary,.primary,button.primary{background:var(--blue);color:#fff;border:0}
 .link-btn{color:var(--blue)}
+
+body.noprice .type-price:empty,
+body.noprice .t-price:empty,
+body.noprice .r-price:empty,
+body.noprice .side-total { display: none !important; }
+body.noprice .side-row .a:empty { display: none; }
