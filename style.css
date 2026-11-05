@@ -19,3 +19,5 @@ form.rv{background:#fff;border:1px solid #e3e7ef;border-radius:14px;padding:22px
 .err{color:#b42318}
 button[disabled],input[disabled]{opacity:.6;cursor:not-allowed}
 @media(max-width:600px){header{flex-wrap:wrap;gap:8px}.filters,#nf{flex-direction:column}.filters>*,#nf>*{width:100%}form.rv{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+
+.hiring{margin:18px 0;padding:14px;border:2px solid #f5c04a;border-radius:12px;background:#fff4d6}.hhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.tag.gold{background:#f5c04a;color:#4a3500}.job{padding:8px 0}.job .btn{margin-top:6px}
