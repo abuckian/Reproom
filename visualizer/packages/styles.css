@@ -541,6 +541,47 @@ body:not(.rep) .rep-note { display: none !important; }
 
 
 
+
+
+/* Phone: stack stage above selections; stop the side panel crushing the steps */
+@media (max-width: 820px) {
+  .layout {
+    flex-direction: column;
+  }
+  .stage {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .stage-scroll {
+    padding: 14px 14px 22px;
+  }
+  .side {
+    width: 100%;
+    flex: 0 0 auto;
+    max-height: 42vh;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .side-head { padding: 12px 16px 6px; }
+  .side-list { padding: 0 16px 4px; }
+  .side-foot { padding: 10px 16px 14px; }
+  .side-line { font-size: 15px; }
+  .stepbar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .stepbar::-webkit-scrollbar { display: none; }
+  .step-chip .label { display: none; }
+  .step-chip { padding: 0 10px 0 6px; }
+  .lines { grid-template-columns: 1fr; }
+  .tiles { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .tiles.wide { grid-template-columns: 1fr; }
+  .cols-2 { grid-template-columns: 1fr; }
+  .preview-banner { flex-wrap: wrap; height: auto; padding: 16px; gap: 14px; }
+  .preview-icon { width: 56px; height: 56px; border-radius: 14px; }
+}
+
 /* Public RepRoom: no prices */
 .noprice-hide{display:none!important}
 .t-price:empty,.r-price:empty,.r-sub:empty,.lc-price:empty{display:none!important}
